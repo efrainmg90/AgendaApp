@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">AgendaApp</string>
+    <string name="welcome">Organiza tus tareas con tu Agenda Personal</string>
+    <string name="loading">Cargando...</string>
+    <string name="hint_title">Evento:</string>
+    <string name="hint_description">Descripcion:</string>
+    <string name="hint_date">Fecha:</string>
+    <string name="addContactTitle">Agregar contactos</string>
+    <string name="title_form">Registrar Evento</string>
+    <string name="save">Guardar</string>
+    <string name="btn_edit">Editar</string>
+    <string name="btn_delete">Eliminar</string>
+    <string name="call">Llamar a Contactos</string>
+    <string name="btn_send_msn">Enviar MSN a Contactos</string>
+</resources>
