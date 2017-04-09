@@ -53,7 +53,8 @@ public class SaveAppointmentActivity extends AppCompatActivity {
     AppointmentDAL dalAppointment;
 
     Appointment appointmentToUpdate;
-    boolean methodFlag;
+    List<String> contactsToUpdate;
+    boolean methodFlag,contactsChangedFlag=false;
 
 
     public class LoadingContactsTask extends AsyncTask<Void,Void,Void> {
@@ -143,8 +144,7 @@ public class SaveAppointmentActivity extends AppCompatActivity {
                     Snackbar.make(view,"Por favor ingrese todos los campos",Snackbar.LENGTH_LONG).show();
                 }
                 else{
-                    saveAppointmenWithContacts();
-                    Snackbar.make(view,"Evento Guardado",Snackbar.LENGTH_LONG).show();
+                    saveAppointmenWithContacts(view);
                     Intent intent = new Intent(SaveAppointmentActivity.this,AppointmentListActivity.class);
                     startActivity(intent);
                     finish();
@@ -203,8 +203,8 @@ public class SaveAppointmentActivity extends AppCompatActivity {
         listViewContacts.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
         if(methodFlag){
-            listViewContacts.setItemChecked(2,true);
-            listViewContacts.setSelection(2);
+           // listViewContacts.setItemChecked(2,true);
+            //listViewContacts.setSelection(2);
         }
 
         AlertDialog.Builder builder  = new AlertDialog.Builder(SaveAppointmentActivity.this);
@@ -216,6 +216,7 @@ public class SaveAppointmentActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialogInterface, int i) {
                 checkedContacs = listViewContacts.getCheckedItemPositions();
                 showContactsSelected();
+                contactsChangedFlag =true;
             }
         });
         dialog= builder.create();
@@ -232,7 +233,7 @@ public class SaveAppointmentActivity extends AppCompatActivity {
             titleContactsAdd.setText(strContacts);
     }
 
-    public void saveAppointmenWithContacts(){
+    public void saveAppointmenWithContacts(View view){
         dalAppointment = new AppointmentDAL(this);
         dalAppointment.open();
         Appointment appointment = new Appointment();
@@ -242,8 +243,12 @@ public class SaveAppointmentActivity extends AppCompatActivity {
         if(methodFlag){
             appointment.setId(appointmentToUpdate.getId());
             dalAppointment.updateAppointment(appointment);
+            Snackbar.make(view,"Evento Actualizado",Snackbar.LENGTH_LONG).show();
+            if(contactsChangedFlag)
+                dalAppointment.deleteContactsEvent(appointmentToUpdate.getId());
         }else {
             appointment = dalAppointment.addAppointment(appointment);
+            Snackbar.make(view,"Evento Guardado",Snackbar.LENGTH_LONG).show();
         }
         for (int i = 0; i < contactNameList.size(); i++)
             if (checkedContacs.get(i)) {
@@ -256,9 +261,17 @@ public class SaveAppointmentActivity extends AppCompatActivity {
 
     public void loadDataToUpdate(){
         appointmentToUpdate = (Appointment) getIntent().getSerializableExtra("appointment");
+        contactsToUpdate = (List<String>) getIntent().getSerializableExtra("contacts");
         title.setText(appointmentToUpdate.getTitle());
         description.setText(appointmentToUpdate.getDescription());
         date.setText(appointmentToUpdate.getDate());
+        String strContacts = "Contactos Agregados: ";
+        for (int i = 0; i < contactsToUpdate.size(); i++)
+             {
+                String item = contactsToUpdate.get(i);
+                strContacts = strContacts +"*"+ item+"  ";
+            }
+        titleContactsAdd.setText(strContacts);
     }
 
 }

@@ -81,7 +81,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textMultiLine"
-                android:lines="4"
+                android:lines="2"
                 android:hint="@string/hint_description"
                  />
         </android.support.design.widget.TextInputLayout>

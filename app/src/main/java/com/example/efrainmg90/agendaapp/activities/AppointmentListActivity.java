@@ -144,8 +144,17 @@ public class AppointmentListActivity extends AppCompatActivity {
                 btnOpEdit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View viewChild) {
+                        List<String> contactNames = new ArrayList<String>();
+                        dalAppointment.open();
+                        contactsIntoAppointment = dalAppointment.getContactsItemsSelected(appointmentSelected.getId());
+                        dalAppointment.close();
+                        for (long contactId:contactsIntoAppointment) {
+                            Contact contact= contactsLoader.findContactById(contactId);
+                            contactNames.add(contact.getName());
+                        }
                         Intent intent = new Intent(AppointmentListActivity.this,SaveAppointmentActivity.class);
                         intent.putExtra("appointment", (Serializable) appointmentSelected);
+                        intent.putExtra("contacts", (Serializable) contactNames);
                         intent.putExtra("flag",true);
                         startActivity(intent);
                         finish();
@@ -242,14 +251,9 @@ public class AppointmentListActivity extends AppCompatActivity {
                     }
                 }); // end Onclick SendMSN
 
-
-
                 return false;
             }
         });
     }// end bootstrapList
-
-
-
 
 }
