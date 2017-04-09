@@ -7,23 +7,35 @@
         android:id="@+id/button_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/btn_edit"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:shadowRadius="@color/primary_text"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:drawableLeft="@drawable/ic_mode_edit_black_24dp"
+        android:text="@string/btn_edit"
+        android:textAlignment="center" />
 
     <Button
         android:id="@+id/button_delete"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:drawableLeft="@drawable/ic_delete_black_24dp"
         android:text="@string/btn_delete"
         android:layout_below="@+id/button_edit"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        style="?android:attr/gradientRadius" />/>
 
     <Button
         android:id="@+id/button_call"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/call"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:drawableLeft="@drawable/ic_phone_black_24dp"
         android:layout_below="@+id/button_delete"
         android:layout_alignParentStart="true" />
 
@@ -32,6 +44,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/btn_send_msn"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:drawableLeft="@drawable/ic_email_black_24dp"
         android:layout_below="@+id/button_call"
         android:layout_alignParentStart="true" />
 </RelativeLayout>

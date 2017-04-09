@@ -22,7 +22,6 @@
         </activity>
         <activity android:name=".activities.AppointmentListActivity" />
         <activity android:name=".activities.SaveAppointmentActivity" />
-        <activity android:name=".activities.UpdateAppointmentActivity"></activity>
     </application>
 
 </manifest>

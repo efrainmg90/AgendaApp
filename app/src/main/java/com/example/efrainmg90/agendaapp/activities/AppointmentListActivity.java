@@ -10,14 +10,17 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.util.Linkify;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.efrainmg90.agendaapp.DAL.AppointmentDAL;
@@ -66,6 +69,24 @@ public class AppointmentListActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==R.id.op_about){
+            LayoutInflater inflater =AppointmentListActivity.this.getLayoutInflater();
+            View view =inflater.inflate(R.layout.dialog_about, null);
+
+            TextView phone = (TextView) view.findViewById(R.id.about_phone);
+            Linkify.addLinks(phone,Linkify.PHONE_NUMBERS);
+            TextView code = (TextView) view.findViewById(R.id.about_code);
+            Linkify.addLinks(code,Linkify.WEB_URLS);
+            TextView email = (TextView) view.findViewById(R.id.about_email);
+            Linkify.addLinks(email,Linkify.EMAIL_ADDRESSES);
+
+            AlertDialog.Builder builder  = new AlertDialog.Builder(AppointmentListActivity.this);
+            builder.setTitle("Acerca del desarrollador: ");
+            builder.setView(view);
+            builder.setNegativeButton("Aceptar", null);
+            Dialog dialog = builder.create();
+            dialog.show();
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -123,7 +144,6 @@ public class AppointmentListActivity extends AppCompatActivity {
                 btnOpEdit.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View viewChild) {
-                        Toast.makeText(AppointmentListActivity.this, "Click en editar:"+ appointmentSelected.getTitle(), Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(AppointmentListActivity.this,SaveAppointmentActivity.class);
                         intent.putExtra("appointment", (Serializable) appointmentSelected);
                         intent.putExtra("flag",true);
@@ -139,7 +159,7 @@ public class AppointmentListActivity extends AppCompatActivity {
                         int rows = dalAppointment.deleteAppointment(appointmentSelected);
                         int row2 = dalAppointment.deleteContactsEvent(appointmentSelected.getId());
                         dalAppointment.close();
-                        if(rows>0&&row2>0){
+                        if(rows>0){
                             Snackbar.make(view,"Evento eliminado",Snackbar.LENGTH_LONG).show();
                             reloadAppointmentList();
                         }else

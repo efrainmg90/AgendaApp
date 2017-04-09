@@ -13,4 +13,9 @@
     <string name="call">Llamar a Contactos</string>
     <string name="btn_send_msn">Enviar SMS a Contactos</string>
     <string name="about">Acerca de...</string>
+    <string name="about_title">Informacion Personal:</string>
+    <string name="about_name">Efraín Martínez Guerrero</string>
+    <string name="about_phone">4611823113</string>
+    <string name="about_email">efrainmg90@gmail.com</string>
+    <string name="about_code">https://github.com/efrainmg90/AgendaApp</string>
 </resources>

@@ -8,7 +8,11 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.util.Linkify;
 import android.util.SparseBooleanArray;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -83,8 +87,11 @@ public class SaveAppointmentActivity extends AppCompatActivity {
         contactNameList = new ArrayList<>();
 
         methodFlag = getIntent().getBooleanExtra("flag",false);
-        if(methodFlag)
+        if(methodFlag){
+            titleContactsAdd.setText("Actualizar Evento");
             loadDataToUpdate();
+        }
+
 
         new LoadingContactsTask().execute();
 
@@ -132,16 +139,51 @@ public class SaveAppointmentActivity extends AppCompatActivity {
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                saveAppointmenWithContacts();
-                Snackbar.make(view,"Evento Guardado",Snackbar.LENGTH_LONG).show();
-                Intent intent = new Intent(SaveAppointmentActivity.this,AppointmentListActivity.class);
-                startActivity(intent);
-                finish();
+                if(title.getText().toString().equals("")|| date.getText().toString().equals("")||description.getText().equals("")){
+                    Snackbar.make(view,"Por favor ingrese todos los campos",Snackbar.LENGTH_LONG).show();
+                }
+                else{
+                    saveAppointmenWithContacts();
+                    Snackbar.make(view,"Evento Guardado",Snackbar.LENGTH_LONG).show();
+                    Intent intent = new Intent(SaveAppointmentActivity.this,AppointmentListActivity.class);
+                    startActivity(intent);
+                    finish();
+                }
+
             }
         });
 
 
-    }// end Oncreate
+    }// end
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_main,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId()==R.id.op_about){
+            LayoutInflater inflater =SaveAppointmentActivity.this.getLayoutInflater();
+            View view =inflater.inflate(R.layout.dialog_about, null);
+
+            TextView phone = (TextView) view.findViewById(R.id.about_phone);
+            Linkify.addLinks(phone,Linkify.PHONE_NUMBERS);
+            TextView code = (TextView) view.findViewById(R.id.about_code);
+            Linkify.addLinks(code,Linkify.WEB_URLS);
+            TextView email = (TextView) view.findViewById(R.id.about_email);
+            Linkify.addLinks(email,Linkify.EMAIL_ADDRESSES);
+
+            AlertDialog.Builder builder  = new AlertDialog.Builder(SaveAppointmentActivity.this);
+            builder.setTitle("Acerca del desarrollador: ");
+            builder.setView(view);
+            builder.setNegativeButton("Aceptar", null);
+            Dialog dialog = builder.create();
+            dialog.show();
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     private void loadContactNames(){
         ContactsLoader loader = new ContactsLoader(this);
@@ -183,7 +225,6 @@ public class SaveAppointmentActivity extends AppCompatActivity {
         String strContacts = "Contactos Agregados: ";
         for (int i = 0; i < contactNameList.size(); i++)
             if (checkedContacs.get(i)) {
-                Toast.makeText(this, contactNameList.get(i), Toast.LENGTH_SHORT).show();
                 String item = contactNameList.get(i);
                 strContacts = strContacts +"*"+ item+"  ";
   /* do whatever you want with the checked item */
