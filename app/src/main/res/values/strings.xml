@@ -11,5 +11,6 @@
     <string name="btn_edit">Editar</string>
     <string name="btn_delete">Eliminar</string>
     <string name="call">Llamar a Contactos</string>
-    <string name="btn_send_msn">Enviar MSN a Contactos</string>
+    <string name="btn_send_msn">Enviar SMS a Contactos</string>
+    <string name="about">Acerca de...</string>
 </resources>

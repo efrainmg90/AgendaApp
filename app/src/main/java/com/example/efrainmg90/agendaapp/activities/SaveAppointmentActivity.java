@@ -1,5 +1,6 @@
 package com.example.efrainmg90.agendaapp.activities;
 
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -9,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.SparseBooleanArray;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -34,17 +36,20 @@ import java.util.List;
 public class SaveAppointmentActivity extends AppCompatActivity {
 
 
+    Dialog dialog;
+    ListView listViewContacts;
     Button buttonSave;
     TextView titleContactsAdd;
     EditText title,description,date;
-    ArrayAdapter arrayAdapterContacts ;
     List<Contact> contactList;
     List<String> contactNameList;
     ImageView imageViewContact;
     SparseBooleanArray checkedContacs;
 
-    ScheduleDBHelper scheduleDBHelper;
     AppointmentDAL dalAppointment;
+
+    Appointment appointmentToUpdate;
+    boolean methodFlag;
 
 
     public class LoadingContactsTask extends AsyncTask<Void,Void,Void> {
@@ -77,11 +82,11 @@ public class SaveAppointmentActivity extends AppCompatActivity {
         titleContactsAdd = (TextView) findViewById(R.id.title_img_contact);
         contactNameList = new ArrayList<>();
 
+        methodFlag = getIntent().getBooleanExtra("flag",false);
+        if(methodFlag)
+            loadDataToUpdate();
 
         new LoadingContactsTask().execute();
-        arrayAdapterContacts = new ArrayAdapter(this, android.R.layout.select_dialog_multichoice,contactNameList);
-
-
 
 
         date.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -116,22 +121,10 @@ public class SaveAppointmentActivity extends AppCompatActivity {
         imageViewContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final ListView listViewContacts = new ListView(SaveAppointmentActivity.this);
-                listViewContacts.setAdapter(arrayAdapterContacts);
-                listViewContacts.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
-                AlertDialog.Builder builder  = new AlertDialog.Builder(SaveAppointmentActivity.this);
-                builder.setTitle("Contactos: ");
-                builder.setView(listViewContacts);
-                builder.setNegativeButton("Cancelar", null);
-                builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        checkedContacs = listViewContacts.getCheckedItemPositions();
-                        showContactsSelected();
-
-                    }
-                });
-                builder.show();
+                if(dialog!=null)
+                    dialog.show();
+                else
+                    Toast.makeText(SaveAppointmentActivity.this, "Espere cargando contactos...", Toast.LENGTH_SHORT).show();
             }
 
         });//end on ClickListener
@@ -140,7 +133,7 @@ public class SaveAppointmentActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 saveAppointmenWithContacts();
-                Snackbar.make(view,"Evento Guardado",Snackbar.LENGTH_SHORT);
+                Snackbar.make(view,"Evento Guardado",Snackbar.LENGTH_LONG).show();
                 Intent intent = new Intent(SaveAppointmentActivity.this,AppointmentListActivity.class);
                 startActivity(intent);
                 finish();
@@ -161,10 +154,29 @@ public class SaveAppointmentActivity extends AppCompatActivity {
     }
 
     public void loadListView(){
-        arrayAdapterContacts.clear();
-        arrayAdapterContacts = new ArrayAdapter(this, android.R.layout.select_dialog_multichoice,contactNameList);
+        ArrayAdapter arrayAdapterContacts  = new ArrayAdapter(this, android.R.layout.select_dialog_multichoice,contactNameList);
         arrayAdapterContacts.notifyDataSetChanged();
+        listViewContacts = new ListView(SaveAppointmentActivity.this);
+        listViewContacts.setAdapter(arrayAdapterContacts);
+        listViewContacts.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
+        if(methodFlag){
+            listViewContacts.setItemChecked(2,true);
+            listViewContacts.setSelection(2);
+        }
+
+        AlertDialog.Builder builder  = new AlertDialog.Builder(SaveAppointmentActivity.this);
+        builder.setTitle("Contactos: ");
+        builder.setView(listViewContacts);
+        builder.setNegativeButton("Cancelar", null);
+        builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                checkedContacs = listViewContacts.getCheckedItemPositions();
+                showContactsSelected();
+            }
+        });
+        dialog= builder.create();
     }
 
     public void showContactsSelected(){
@@ -186,15 +198,26 @@ public class SaveAppointmentActivity extends AppCompatActivity {
         appointment.setTitle(title.getText().toString());
         appointment.setDescription(description.getText().toString());
         appointment.setDate(date.getText().toString());
-        appointment = dalAppointment.addAppointment(appointment);
-        Toast.makeText(this, "Se guardo el evento: "+appointment.toString(), Toast.LENGTH_SHORT).show();
+        if(methodFlag){
+            appointment.setId(appointmentToUpdate.getId());
+            dalAppointment.updateAppointment(appointment);
+        }else {
+            appointment = dalAppointment.addAppointment(appointment);
+        }
         for (int i = 0; i < contactNameList.size(); i++)
             if (checkedContacs.get(i)) {
-                dalAppointment.addContactToEvent(Long.parseLong(contactList.get(i).getId()), appointment.getId());
+                dalAppointment.addContactToEvent((contactList.get(i).getId()), appointment.getId());
 
             }
 
         dalAppointment.close();
+    }
+
+    public void loadDataToUpdate(){
+        appointmentToUpdate = (Appointment) getIntent().getSerializableExtra("appointment");
+        title.setText(appointmentToUpdate.getTitle());
+        description.setText(appointmentToUpdate.getDescription());
+        date.setText(appointmentToUpdate.getDate());
     }
 
 }

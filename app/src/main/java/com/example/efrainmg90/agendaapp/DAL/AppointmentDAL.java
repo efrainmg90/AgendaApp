@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.efrainmg90.agendaapp.Helpers.ScheduleDBHelper;
 import com.example.efrainmg90.agendaapp.models.Appointment;
@@ -22,6 +23,7 @@ public class AppointmentDAL {
 
     SQLiteOpenHelper dbScheduleHelper;
     SQLiteDatabase database;
+    Context context;
 
     private static final String[] allColumns = {
             ScheduleDBHelper.COLUMN_ID,
@@ -33,6 +35,7 @@ public class AppointmentDAL {
 
     public AppointmentDAL(Context context) {
         dbScheduleHelper = new ScheduleDBHelper(context);
+        this.context = context;
     }
 
     public void open(){
@@ -56,13 +59,6 @@ public class AppointmentDAL {
 
     }// end addApointment
 
-    public void addContactToEvent(long id_contact,long id_appointment){
-        ContentValues values = new ContentValues();
-        values.put(ScheduleDBHelper.COLUMN_ID_CONTACT,id_contact);
-        values.put(ScheduleDBHelper.COLUMN_ID_APPOINT,id_appointment);
-        long id = database.insert(ScheduleDBHelper.TABLE_APPOINTMENT_CONTACTS,null,values);
-        Log.d("AppointmentDAL:","Se genero el id: "+id);
-    }
 
     public Appointment getAppointment(long id){
         Appointment appointment = new Appointment();
@@ -111,4 +107,32 @@ public class AppointmentDAL {
         return database.delete(ScheduleDBHelper.TABLE_APPOINTMENT,ScheduleDBHelper.COLUMN_ID+"=?",
                 new String[]{String.valueOf(appointment.getId())});
     }//end deleteAppointment
+
+    public List<Long> getContactsItemsSelected(long idAppointment){
+        List<Long> contactsList = new ArrayList<Long>();
+        Cursor cursor = database.query(ScheduleDBHelper.TABLE_APPOINTMENT_CONTACTS,null,ScheduleDBHelper.COLUMN_ID_APPOINT+"=?",
+                new String[]{String.valueOf(idAppointment)},null,null,null);
+        if(cursor.getCount()>0){
+            while (cursor.moveToNext()){
+                Long idContact = cursor.getLong(cursor.getColumnIndex(ScheduleDBHelper.COLUMN_ID_CONTACT));
+                contactsList.add(idContact);
+            }
+        }
+        return  contactsList;
+    }
+
+    public void addContactToEvent(long id_contact,long id_appointment){
+        ContentValues values = new ContentValues();
+        values.put(ScheduleDBHelper.COLUMN_ID_CONTACT,id_contact);
+        values.put(ScheduleDBHelper.COLUMN_ID_APPOINT,id_appointment);
+        long id = database.insert(ScheduleDBHelper.TABLE_APPOINTMENT_CONTACTS,null,values);
+        Log.d("AppointmentDAL:","Se genero el id: "+id);
+    }
+
+    public int deleteContactsEvent(long id_appointment){
+        return database.delete(ScheduleDBHelper.TABLE_APPOINTMENT_CONTACTS,ScheduleDBHelper.COLUMN_ID_APPOINT+"=?",
+                new String[]{String.valueOf(id_appointment)});
+    }
+
+
 }

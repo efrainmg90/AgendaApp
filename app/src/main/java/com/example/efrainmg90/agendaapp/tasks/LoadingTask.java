@@ -49,6 +49,7 @@ public class LoadingTask extends AsyncTask<Integer,Integer,Void> {
     protected void onPostExecute(Void aVoid) {
         super.onPostExecute(aVoid);
         Intent intent = new Intent(context, AppointmentListActivity.class);
+        intent.putExtra("flag",false);
         context.startActivity(intent);
         ((Activity)context).finish();
 

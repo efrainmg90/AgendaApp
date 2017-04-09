@@ -6,7 +6,7 @@ package com.example.efrainmg90.agendaapp.models;
 
 public class Contact {
 
-    private String id;
+    private Long id;
     private String name;
     private String phone;
     private String email;
@@ -14,11 +14,11 @@ public class Contact {
     public Contact() {
     }
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

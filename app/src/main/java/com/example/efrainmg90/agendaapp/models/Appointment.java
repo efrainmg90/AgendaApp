@@ -1,10 +1,12 @@
 package com.example.efrainmg90.agendaapp.models;
 
+import java.io.Serializable;
+
 /**
  * Created by Efrainmg90 on 01/04/2017.
  */
 
-public class Appointment {
+public class Appointment implements Serializable{
     private long id;
     private String title;
     private String description;

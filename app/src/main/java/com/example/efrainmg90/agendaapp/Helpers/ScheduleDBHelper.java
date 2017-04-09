@@ -32,8 +32,8 @@ public class ScheduleDBHelper extends SQLiteOpenHelper {
     private static final String TABLE_CREATE_CONTACT_APPOINT =
             "CREATE TABLE " + TABLE_APPOINTMENT_CONTACTS + " (" +
                     COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    COLUMN_ID_APPOINT + " TEXT, " +
-                    COLUMN_ID_CONTACT + " TEXT " +
+                    COLUMN_ID_APPOINT + " INTEGER, " +
+                    COLUMN_ID_CONTACT + " INTEGER " +
                     ")";
 
 

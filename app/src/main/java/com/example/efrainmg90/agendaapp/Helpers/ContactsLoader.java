@@ -42,7 +42,7 @@ public class ContactsLoader {
                 String name = cur
                         .getString(cur
                                 .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
-                contact.setId(id);
+                contact.setId(Long.parseLong(id));
                 contact.setName(name);
                 // Query phone here. Covered next
                 if (Integer
@@ -85,6 +85,52 @@ public class ContactsLoader {
         }
 
         return contactList; // here you can return whatever you want.
+    }
+
+    public Contact findContactById(Long idContact){
+        Contact contact = new Contact();
+
+        ContentResolver cr =context.getContentResolver();
+        Cursor cur = cr.query(ContactsContract.Contacts.CONTENT_URI, null,
+                ContactsContract.Contacts._ID+ " = ?", new String[]{String.valueOf(idContact)}, null);
+
+        if (cur.getCount() > 0) {
+            while (cur.moveToNext()) {
+                String id = cur.getString(cur
+                        .getColumnIndex(ContactsContract.Contacts._ID));
+                String name = cur
+                        .getString(cur
+                                .getColumnIndex(ContactsContract.Contacts.DISPLAY_NAME));
+                contact.setId(Long.parseLong(id));
+                contact.setName(name);
+                // Query phone here. Covered next
+                if (Integer
+                        .parseInt(cur.getString(cur
+                                .getColumnIndex(ContactsContract.Contacts.HAS_PHONE_NUMBER))) > 0) {
+
+                    Cursor pCur = cr.query(
+                            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                            null,
+                            ContactsContract.CommonDataKinds.Phone.CONTACT_ID+ " = ?"
+                                    , new String[]{id}, null);
+                    while (pCur.moveToNext()) {
+                        // Do something with phones
+                        String phoneNo = pCur
+                                .getString(pCur
+                                        .getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+                        contact.setPhone(phoneNo);
+
+
+                    }
+                    pCur.close();
+                }
+
+
+            }
+            cur.close();
+        }
+
+        return contact; // here you can return whatever you want.
     }
 
 }
