@@ -33,39 +33,40 @@ public class AppointmentDAL {
             ScheduleDBHelper.COLUMN_HOUR
     };
 
+
     public AppointmentDAL(Context context) {
         dbScheduleHelper = new ScheduleDBHelper(context);
         this.context = context;
     }
 
-    public void open(){
-        Log.i(LOGTAG,"Database Opened");
+    public void open() {
+        Log.i(LOGTAG, "Database Opened");
         database = dbScheduleHelper.getWritableDatabase();
     }
 
-    public void close(){
-        Log.i(LOGTAG,"Database Closed");
+    public void close() {
+        Log.i(LOGTAG, "Database Closed");
         dbScheduleHelper.close();
     }
 
-    public Appointment addAppointment (Appointment appointment){
+    public Appointment addAppointment(Appointment appointment) {
         ContentValues values = new ContentValues();
-        values.put(ScheduleDBHelper.COLUMN_TITLE,appointment.getTitle());
-        values.put(ScheduleDBHelper.COLUMN_DESCRIPTION,appointment.getDescription());
-        values.put(ScheduleDBHelper.COLUMN_DATE,appointment.getDate());
-        values.put(ScheduleDBHelper.COLUMN_HOUR,appointment.getHour());
-        long id = database.insert(ScheduleDBHelper.TABLE_APPOINTMENT,null,values);
+        values.put(ScheduleDBHelper.COLUMN_TITLE, appointment.getTitle());
+        values.put(ScheduleDBHelper.COLUMN_DESCRIPTION, appointment.getDescription());
+        values.put(ScheduleDBHelper.COLUMN_DATE, appointment.getDate());
+        values.put(ScheduleDBHelper.COLUMN_HOUR, appointment.getHour());
+        long id = database.insert(ScheduleDBHelper.TABLE_APPOINTMENT, null, values);
         appointment.setId(id);
         return appointment;
 
     }// end addApointment
 
 
-    public Appointment getAppointment(long id){
+    public Appointment getAppointment(long id) {
         Appointment appointment = new Appointment();
-        Cursor cursor = database.query(ScheduleDBHelper.TABLE_APPOINTMENT,allColumns,ScheduleDBHelper.COLUMN_ID+"=?",
-                new String[]{String.valueOf(id)},null,null,null);
-        if(cursor.getCount()>0){
+        Cursor cursor = database.query(ScheduleDBHelper.TABLE_APPOINTMENT, allColumns, ScheduleDBHelper.COLUMN_ID + "=?",
+                new String[]{String.valueOf(id)}, null, null, null);
+        if (cursor.getCount() > 0) {
             cursor.moveToFirst();
             appointment.setId(Long.parseLong(cursor.getString(0)));
             appointment.setTitle(cursor.getString(1));
@@ -77,11 +78,11 @@ public class AppointmentDAL {
         return appointment;
     }//end get Appointment
 
-    public List<Appointment> getAllAppointments(){
+    public List<Appointment> getAllAppointments() {
         List<Appointment> appointmentList = new ArrayList<Appointment>();
-        Cursor cursor = database.query(ScheduleDBHelper.TABLE_APPOINTMENT,allColumns,null,null,null,null,null);
-        if(cursor.getCount()>0){
-            while (cursor.moveToNext()){
+        Cursor cursor = database.query(ScheduleDBHelper.TABLE_APPOINTMENT, allColumns, null, null, null, null, null);
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
                 Appointment appointment = new Appointment();
                 appointment.setId(cursor.getLong(cursor.getColumnIndex(ScheduleDBHelper.COLUMN_ID)));
                 appointment.setTitle(cursor.getString(cursor.getColumnIndex(ScheduleDBHelper.COLUMN_TITLE)));
@@ -92,49 +93,49 @@ public class AppointmentDAL {
                 appointmentList.add(appointment);
             }
         }
-        return  appointmentList;
+        return appointmentList;
     }// end getAllAppointments
 
-    public int updateAppointment(Appointment appointment){
+    public int updateAppointment(Appointment appointment) {
         ContentValues values = new ContentValues();
-        values.put(ScheduleDBHelper.COLUMN_TITLE,appointment.getTitle());
-        values.put(ScheduleDBHelper.COLUMN_DESCRIPTION,appointment.getDescription());
-        values.put(ScheduleDBHelper.COLUMN_DATE,appointment.getDate());
-        values.put(ScheduleDBHelper.COLUMN_HOUR,appointment.getHour());
+        values.put(ScheduleDBHelper.COLUMN_TITLE, appointment.getTitle());
+        values.put(ScheduleDBHelper.COLUMN_DESCRIPTION, appointment.getDescription());
+        values.put(ScheduleDBHelper.COLUMN_DATE, appointment.getDate());
+        values.put(ScheduleDBHelper.COLUMN_HOUR, appointment.getHour());
 
-        return database.update(ScheduleDBHelper.TABLE_APPOINTMENT,values,ScheduleDBHelper.COLUMN_ID+"=?",
+        return database.update(ScheduleDBHelper.TABLE_APPOINTMENT, values, ScheduleDBHelper.COLUMN_ID + "=?",
                 new String[]{String.valueOf(appointment.getId())});
     }//end getupdateAppointment
 
 
-    public int deleteAppointment(Appointment appointment){
-        return database.delete(ScheduleDBHelper.TABLE_APPOINTMENT,ScheduleDBHelper.COLUMN_ID+"=?",
+    public int deleteAppointment(Appointment appointment) {
+        return database.delete(ScheduleDBHelper.TABLE_APPOINTMENT, ScheduleDBHelper.COLUMN_ID + "=?",
                 new String[]{String.valueOf(appointment.getId())});
     }//end deleteAppointment
 
-    public List<Long> getContactsItemsSelected(long idAppointment){
+    public List<Long> getContactsItemsSelected(long idAppointment) {
         List<Long> contactsList = new ArrayList<Long>();
-        Cursor cursor = database.query(ScheduleDBHelper.TABLE_APPOINTMENT_CONTACTS,null,ScheduleDBHelper.COLUMN_ID_APPOINT+"=?",
-                new String[]{String.valueOf(idAppointment)},null,null,null);
-        if(cursor.getCount()>0){
-            while (cursor.moveToNext()){
+        Cursor cursor = database.query(ScheduleDBHelper.TABLE_APPOINTMENT_CONTACTS, null, ScheduleDBHelper.COLUMN_ID_APPOINT + "=?",
+                new String[]{String.valueOf(idAppointment)}, null, null, null);
+        if (cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
                 Long idContact = cursor.getLong(cursor.getColumnIndex(ScheduleDBHelper.COLUMN_ID_CONTACT));
                 contactsList.add(idContact);
             }
         }
-        return  contactsList;
+        return contactsList;
     }
 
-    public void addContactToEvent(long id_contact,long id_appointment){
+    public void addContactToEvent(long id_contact, long id_appointment) {
         ContentValues values = new ContentValues();
-        values.put(ScheduleDBHelper.COLUMN_ID_CONTACT,id_contact);
-        values.put(ScheduleDBHelper.COLUMN_ID_APPOINT,id_appointment);
-        long id = database.insert(ScheduleDBHelper.TABLE_APPOINTMENT_CONTACTS,null,values);
-        Log.d("AppointmentDAL:","Se genero el id: "+id);
+        values.put(ScheduleDBHelper.COLUMN_ID_CONTACT, id_contact);
+        values.put(ScheduleDBHelper.COLUMN_ID_APPOINT, id_appointment);
+        long id = database.insert(ScheduleDBHelper.TABLE_APPOINTMENT_CONTACTS, null, values);
+        Log.d("AppointmentDAL:", "Se genero el id: " + id);
     }
 
-    public int deleteContactsEvent(long id_appointment){
-        return database.delete(ScheduleDBHelper.TABLE_APPOINTMENT_CONTACTS,ScheduleDBHelper.COLUMN_ID_APPOINT+"=?",
+    public int deleteContactsEvent(long id_appointment) {
+        return database.delete(ScheduleDBHelper.TABLE_APPOINTMENT_CONTACTS, ScheduleDBHelper.COLUMN_ID_APPOINT + "=?",
                 new String[]{String.valueOf(id_appointment)});
     }
 

@@ -71,7 +71,7 @@ public class SaveAppointmentActivity extends AppCompatActivity {
             loadListView();
 
         }
-    }
+    }// end loadContactsTask
 
 
     @Override
@@ -95,9 +95,7 @@ public class SaveAppointmentActivity extends AppCompatActivity {
             loadDataToUpdate();
         }
 
-
         new LoadingContactsTask().execute();
-
 
         date.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -193,12 +191,9 @@ public class SaveAppointmentActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 }
-
             }
         });
-
-
-    }// end
+    }// end setOnclick ButtonSave
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -246,11 +241,6 @@ public class SaveAppointmentActivity extends AppCompatActivity {
         listViewContacts.setAdapter(arrayAdapterContacts);
         listViewContacts.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
 
-        if(methodFlag){
-           // listViewContacts.setItemChecked(2,true);
-            //listViewContacts.setSelection(2);
-        }
-
         AlertDialog.Builder builder  = new AlertDialog.Builder(SaveAppointmentActivity.this);
         builder.setTitle("Contactos: ");
         builder.setView(listViewContacts);
@@ -272,7 +262,6 @@ public class SaveAppointmentActivity extends AppCompatActivity {
             if (checkedContacs.get(i)) {
                 String item = contactNameList.get(i);
                 strContacts = strContacts +"*"+ item+"  ";
-  /* do whatever you want with the checked item */
             }
             titleContactsAdd.setText(strContacts);
     }
@@ -321,6 +310,6 @@ public class SaveAppointmentActivity extends AppCompatActivity {
                 strContacts = strContacts +"*"+ item+"  ";
             }
         titleContactsAdd.setText(strContacts);
-    }
+    }// end method load data if Update Appointment
 
 }

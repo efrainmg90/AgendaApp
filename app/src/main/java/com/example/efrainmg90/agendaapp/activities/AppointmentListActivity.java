@@ -65,24 +65,24 @@ public class AppointmentListActivity extends AppCompatActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main,menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()==R.id.op_about){
-            LayoutInflater inflater =AppointmentListActivity.this.getLayoutInflater();
-            View view =inflater.inflate(R.layout.dialog_about, null);
+        if (item.getItemId() == R.id.op_about) {
+            LayoutInflater inflater = AppointmentListActivity.this.getLayoutInflater();
+            View view = inflater.inflate(R.layout.dialog_about, null);
 
             TextView phone = (TextView) view.findViewById(R.id.about_phone);
-            Linkify.addLinks(phone,Linkify.PHONE_NUMBERS);
+            Linkify.addLinks(phone, Linkify.PHONE_NUMBERS);
             TextView code = (TextView) view.findViewById(R.id.about_code);
-            Linkify.addLinks(code,Linkify.WEB_URLS);
+            Linkify.addLinks(code, Linkify.WEB_URLS);
             TextView email = (TextView) view.findViewById(R.id.about_email);
-            Linkify.addLinks(email,Linkify.EMAIL_ADDRESSES);
+            Linkify.addLinks(email, Linkify.EMAIL_ADDRESSES);
 
-            AlertDialog.Builder builder  = new AlertDialog.Builder(AppointmentListActivity.this);
+            AlertDialog.Builder builder = new AlertDialog.Builder(AppointmentListActivity.this);
             builder.setTitle("Acerca del desarrollador: ");
             builder.setView(view);
             builder.setNegativeButton("Aceptar", null);
@@ -92,11 +92,11 @@ public class AppointmentListActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void reloadAppointmentList(){
+    public void reloadAppointmentList() {
         dalAppointment.open();
-        if (appointmentList!=null){
+        if (appointmentList != null) {
             appointmentList = dalAppointment.getAllAppointments();
-            appointmentListViewAdapter = new AppointmentListViewAdapter(this,appointmentList);
+            appointmentListViewAdapter = new AppointmentListViewAdapter(this, appointmentList);
             appointmentListViewAdapter.notifyDataSetChanged();
             listView.setAdapter(appointmentListViewAdapter);
         }
@@ -109,17 +109,17 @@ public class AppointmentListActivity extends AppCompatActivity {
         reloadAppointmentList();
     }
 
-    private void bootstrapList(){
-        appointmentListViewAdapter = new AppointmentListViewAdapter(this,appointmentList);
+    private void bootstrapList() {
+        appointmentListViewAdapter = new AppointmentListViewAdapter(this, appointmentList);
         listView = (ListView) findViewById(R.id.lvAppointmentsList);
         listView.setEmptyView(textEmptyList);
         listView.setAdapter(appointmentListViewAdapter);
         actionButtonAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(AppointmentListActivity.this,SaveAppointmentActivity.class);
+                Intent intent = new Intent(AppointmentListActivity.this, SaveAppointmentActivity.class);
                 startActivity(intent);
-                //Toast.makeText(AppointmentListActivity.this, "Agregar nuevo Apointment", Toast.LENGTH_SHORT).show();
+
             }
         });
 
@@ -128,15 +128,15 @@ public class AppointmentListActivity extends AppCompatActivity {
             public boolean onItemLongClick(AdapterView<?> adapterView, final View view, int i, long l) {
                 final Dialog dialog;
                 final Appointment appointmentSelected = appointmentList.get(i);
-               // Dialog dialog = new Dialog(AppointmentListActivity.this);
-                View options = LayoutInflater.from(AppointmentListActivity.this).inflate(R.layout.layout_options_listview,null);
-                AlertDialog.Builder builder  = new AlertDialog.Builder(AppointmentListActivity.this);
+                // Dialog dialog = new Dialog(AppointmentListActivity.this);
+                View options = LayoutInflater.from(AppointmentListActivity.this).inflate(R.layout.layout_options_listview, null);
+                AlertDialog.Builder builder = new AlertDialog.Builder(AppointmentListActivity.this);
                 builder.setTitle("¿Que operación desea realizar?: ");
                 builder.setView(options);
                 builder.setNegativeButton("Cancelar", null);
                 dialog = builder.create();
                 dialog.show();
-                Vibrator vibrate = (Vibrator)AppointmentListActivity.this.getSystemService(VIBRATOR_SERVICE);
+                Vibrator vibrate = (Vibrator) AppointmentListActivity.this.getSystemService(VIBRATOR_SERVICE);
                 vibrate.vibrate(200);
 
                 Button btnOpEdit = (Button) options.findViewById(R.id.button_edit);
@@ -151,14 +151,14 @@ public class AppointmentListActivity extends AppCompatActivity {
                         dalAppointment.open();
                         contactsIntoAppointment = dalAppointment.getContactsItemsSelected(appointmentSelected.getId());
                         dalAppointment.close();
-                        for (long contactId:contactsIntoAppointment) {
-                            Contact contact= contactsLoader.findContactById(contactId);
+                        for (long contactId : contactsIntoAppointment) {
+                            Contact contact = contactsLoader.findContactById(contactId);
                             contactNames.add(contact.getName());
                         }
-                        Intent intent = new Intent(AppointmentListActivity.this,SaveAppointmentActivity.class);
+                        Intent intent = new Intent(AppointmentListActivity.this, SaveAppointmentActivity.class);
                         intent.putExtra("appointment", (Serializable) appointmentSelected);
                         intent.putExtra("contacts", (Serializable) contactNames);
-                        intent.putExtra("flag",true);
+                        intent.putExtra("flag", true);
                         startActivity(intent);
                         finish();
                     }
@@ -171,11 +171,11 @@ public class AppointmentListActivity extends AppCompatActivity {
                         int rows = dalAppointment.deleteAppointment(appointmentSelected);
                         int row2 = dalAppointment.deleteContactsEvent(appointmentSelected.getId());
                         dalAppointment.close();
-                        if(rows>0){
-                            Snackbar.make(view,"Evento eliminado",Snackbar.LENGTH_LONG).show();
+                        if (rows > 0) {
+                            Snackbar.make(view, "Evento eliminado", Snackbar.LENGTH_LONG).show();
                             reloadAppointmentList();
-                        }else
-                            Snackbar.make(view,"No se pudo eliminar evento",Snackbar.LENGTH_LONG).show();
+                        } else
+                            Snackbar.make(view, "No se pudo eliminar evento", Snackbar.LENGTH_LONG).show();
                         dialog.dismiss();
                     }
                 });// end Onclick Delete
@@ -188,8 +188,8 @@ public class AppointmentListActivity extends AppCompatActivity {
                         dalAppointment.open();
                         contactsIntoAppointment = dalAppointment.getContactsItemsSelected(appointmentSelected.getId());
                         dalAppointment.close();
-                        for (long contactId:contactsIntoAppointment) {
-                            Contact contact= contactsLoader.findContactById(contactId);
+                        for (long contactId : contactsIntoAppointment) {
+                            Contact contact = contactsLoader.findContactById(contactId);
                             contactNames.add(contact.getName());
                             contacts.add(contact);
                         }
@@ -205,10 +205,11 @@ public class AppointmentListActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 // the user clicked on options[which]
                                 Intent callIntent = new Intent(Intent.ACTION_VIEW);
-                                callIntent.setData(Uri.parse("tel:"+contacts.get(which).getPhone()));
+                                callIntent.setData(Uri.parse("tel:" + contacts.get(which).getPhone()));
                                 try {
                                     startActivity(callIntent);
-                                }catch (Exception e){}
+                                } catch (Exception e) {
+                                }
 
                             }
                         });
@@ -225,8 +226,8 @@ public class AppointmentListActivity extends AppCompatActivity {
                         dalAppointment.open();
                         contactsIntoAppointment = dalAppointment.getContactsItemsSelected(appointmentSelected.getId());
                         dalAppointment.close();
-                        for (long contactId:contactsIntoAppointment) {
-                            Contact contact= contactsLoader.findContactById(contactId);
+                        for (long contactId : contactsIntoAppointment) {
+                            Contact contact = contactsLoader.findContactById(contactId);
                             contactNames.add(contact.getName());
                             contacts.add(contact);
                         }
@@ -242,10 +243,11 @@ public class AppointmentListActivity extends AppCompatActivity {
                             public void onClick(DialogInterface dialog, int which) {
                                 // the user clicked on options[which]
                                 Intent callIntent = new Intent(Intent.ACTION_VIEW);
-                                callIntent.setData(Uri.parse("sms:"+contacts.get(which).getPhone()));
+                                callIntent.setData(Uri.parse("sms:" + contacts.get(which).getPhone()));
                                 try {
                                     startActivity(callIntent);
-                                }catch (Exception e){}
+                                } catch (Exception e) {
+                                }
 
                             }
                         });

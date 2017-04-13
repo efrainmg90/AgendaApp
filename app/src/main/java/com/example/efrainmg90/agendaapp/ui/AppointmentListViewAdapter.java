@@ -58,7 +58,6 @@ public class AppointmentListViewAdapter extends BaseAdapter {
         description.setText(appointment.getDescription());
         date.setText(appointment.getDate());
         hour.setText(appointment.getHour());
-        Toast.makeText(context, appointment.toString(), Toast.LENGTH_SHORT).show();
 
         return view;
     }
