@@ -17,6 +17,7 @@ public class ScheduleDBHelper extends SQLiteOpenHelper {
     public static final String COLUMN_TITLE = "title";
     public static final String COLUMN_DESCRIPTION = "description";
     public static final String COLUMN_DATE = "date";
+    public static final String COLUMN_HOUR = "hour";
 
     public static final String TABLE_APPOINTMENT_CONTACTS = "appointmentDetail";
     public static final String COLUMN_ID_APPOINT = "appointment_id";
@@ -27,7 +28,8 @@ public class ScheduleDBHelper extends SQLiteOpenHelper {
                     COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     COLUMN_TITLE + " TEXT, " +
                     COLUMN_DESCRIPTION + " TEXT, " +
-                    COLUMN_DATE + " TEXT " +
+                    COLUMN_DATE + " TEXT, " +
+                    COLUMN_HOUR + " TEXT " +
                     ")";
     private static final String TABLE_CREATE_CONTACT_APPOINT =
             "CREATE TABLE " + TABLE_APPOINTMENT_CONTACTS + " (" +

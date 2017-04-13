@@ -18,4 +18,6 @@
     <string name="about_phone">4611823113</string>
     <string name="about_email">efrainmg90@gmail.com</string>
     <string name="about_code">https://github.com/efrainmg90/AgendaApp</string>
+    <string name="hint_hour">Hora:</string>
+    <string name="empty_list">Lista vacia!  Agrege un evento.</string>
 </resources>

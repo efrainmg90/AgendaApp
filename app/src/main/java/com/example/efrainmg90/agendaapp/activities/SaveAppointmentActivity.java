@@ -23,6 +23,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.efrainmg90.agendaapp.DAL.AppointmentDAL;
@@ -44,7 +45,7 @@ public class SaveAppointmentActivity extends AppCompatActivity {
     ListView listViewContacts;
     Button buttonSave;
     TextView titleContactsAdd;
-    EditText title,description,date;
+    EditText title,description,date,edtHour;
     List<Contact> contactList;
     List<String> contactNameList;
     ImageView imageViewContact;
@@ -81,15 +82,16 @@ public class SaveAppointmentActivity extends AppCompatActivity {
         title = (EditText) findViewById(R.id.edt_title);
         description = (EditText) findViewById(R.id.edt_description);
         date = (EditText) findViewById(R.id.edt_date);
+        edtHour = (EditText) findViewById(R.id.edt_hour);
         buttonSave = (Button) findViewById(R.id.btn_save_appointment_with_contacs);
-
         imageViewContact = (ImageView) findViewById(R.id.imvIcont_add_contact);
         titleContactsAdd = (TextView) findViewById(R.id.title_img_contact);
         contactNameList = new ArrayList<>();
 
         methodFlag = getIntent().getBooleanExtra("flag",false);
         if(methodFlag){
-            titleContactsAdd.setText("Actualizar Evento");
+            TextView mainTitle = (TextView) findViewById(R.id.title_main);
+            mainTitle.setText("Actualizar Evento");
             loadDataToUpdate();
         }
 
@@ -126,6 +128,46 @@ public class SaveAppointmentActivity extends AppCompatActivity {
             }
         });// end on Focuslistener
 
+        edtHour.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View view, boolean b) {
+                if (b){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(SaveAppointmentActivity.this);
+                    final TimePicker picker = new TimePicker(SaveAppointmentActivity.this);
+                    builder.setTitle("Hora: ");
+                    builder.setView(picker);
+                    builder.setNegativeButton("Cancelar", null);
+                    builder.setPositiveButton("Aceptar", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            int hour = picker.getCurrentHour();
+                            int min = picker.getCurrentMinute();
+                            String format = "";
+                            if(picker.is24HourView()){
+                                edtHour.setText(new StringBuilder().append(hour).append(" : ").append(min));
+                            }else {
+                                if (hour == 0) {
+                                    hour += 12;
+                                    format = "AM";
+                                } else if (hour == 12) {
+                                    format = "PM";
+                                } else if (hour > 12) {
+                                    hour -= 12;
+                                    format = "PM";
+                                } else {
+                                    format = "AM";
+                                }
+                                edtHour.setText(new StringBuilder().append(hour).append(" : ").append((min<10)?"0"+min:min)
+                                        .append(" ").append(format));
+                            }
+
+                        }
+                    });
+                    builder.show();
+                }
+            }
+        });// end on Focuslistener
+
         imageViewContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -140,8 +182,10 @@ public class SaveAppointmentActivity extends AppCompatActivity {
         buttonSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(title.getText().toString().equals("")|| date.getText().toString().equals("")||description.getText().equals("")){
+                if(title.getText().toString().equals("")|| date.getText().toString().equals("")||description.getText().equals("")||edtHour.getText().equals("")){
                     Snackbar.make(view,"Por favor ingrese todos los campos",Snackbar.LENGTH_LONG).show();
+                }else if(checkedContacs==null && !methodFlag){
+                    Snackbar.make(view,"Por favor ingrese algun contacto",Snackbar.LENGTH_LONG).show();
                 }
                 else{
                     saveAppointmenWithContacts(view);
@@ -240,6 +284,7 @@ public class SaveAppointmentActivity extends AppCompatActivity {
         appointment.setTitle(title.getText().toString());
         appointment.setDescription(description.getText().toString());
         appointment.setDate(date.getText().toString());
+        appointment.setHour(edtHour.getText().toString());
         if(methodFlag){
             appointment.setId(appointmentToUpdate.getId());
             dalAppointment.updateAppointment(appointment);
@@ -250,11 +295,14 @@ public class SaveAppointmentActivity extends AppCompatActivity {
             appointment = dalAppointment.addAppointment(appointment);
             Snackbar.make(view,"Evento Guardado",Snackbar.LENGTH_LONG).show();
         }
-        for (int i = 0; i < contactNameList.size(); i++)
-            if (checkedContacs.get(i)) {
-                dalAppointment.addContactToEvent((contactList.get(i).getId()), appointment.getId());
 
-            }
+        if(checkedContacs!=null){
+            for (int i = 0; i < contactNameList.size(); i++)
+                if (checkedContacs.get(i)) {
+                    dalAppointment.addContactToEvent((contactList.get(i).getId()), appointment.getId());
+                }
+        }else
+            Snackbar.make(view,"Evento sin contactos agregados",Snackbar.LENGTH_LONG).show();
 
         dalAppointment.close();
     }
@@ -265,6 +313,7 @@ public class SaveAppointmentActivity extends AppCompatActivity {
         title.setText(appointmentToUpdate.getTitle());
         description.setText(appointmentToUpdate.getDescription());
         date.setText(appointmentToUpdate.getDate());
+        edtHour.setText(appointmentToUpdate.getHour());
         String strContacts = "Contactos Agregados: ";
         for (int i = 0; i < contactsToUpdate.size(); i++)
              {

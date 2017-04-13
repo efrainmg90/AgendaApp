@@ -11,6 +11,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         />
+
+    <TextView
+        android:id="@+id/title_empty_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/empty_list"
+        android:textAlignment="center"
+        android:textSize="21dp" />
+
     <android.support.design.widget.FloatingActionButton
         android:src="@drawable/ic_calendar_plus"
         android:layout_width="wrap_content"

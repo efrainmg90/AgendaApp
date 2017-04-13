@@ -36,6 +36,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AppointmentListActivity extends AppCompatActivity {
+    TextView textEmptyList;
     ListView listView;
     FloatingActionButton actionButtonAdd;
     AppointmentListViewAdapter appointmentListViewAdapter;
@@ -50,6 +51,7 @@ public class AppointmentListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_appointment_list);
         actionButtonAdd = (FloatingActionButton) findViewById(R.id.action_bar_add);
+        textEmptyList = (TextView) findViewById(R.id.title_empty_list);
 
         contactsLoader = new ContactsLoader(this);
         dalAppointment = new AppointmentDAL(this);
@@ -110,6 +112,7 @@ public class AppointmentListActivity extends AppCompatActivity {
     private void bootstrapList(){
         appointmentListViewAdapter = new AppointmentListViewAdapter(this,appointmentList);
         listView = (ListView) findViewById(R.id.lvAppointmentsList);
+        listView.setEmptyView(textEmptyList);
         listView.setAdapter(appointmentListViewAdapter);
         actionButtonAdd.setOnClickListener(new View.OnClickListener() {
             @Override

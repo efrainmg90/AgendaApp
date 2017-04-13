@@ -30,7 +30,7 @@ public class AppointmentDAL {
             ScheduleDBHelper.COLUMN_TITLE,
             ScheduleDBHelper.COLUMN_DESCRIPTION,
             ScheduleDBHelper.COLUMN_DATE,
-
+            ScheduleDBHelper.COLUMN_HOUR
     };
 
     public AppointmentDAL(Context context) {
@@ -53,6 +53,7 @@ public class AppointmentDAL {
         values.put(ScheduleDBHelper.COLUMN_TITLE,appointment.getTitle());
         values.put(ScheduleDBHelper.COLUMN_DESCRIPTION,appointment.getDescription());
         values.put(ScheduleDBHelper.COLUMN_DATE,appointment.getDate());
+        values.put(ScheduleDBHelper.COLUMN_HOUR,appointment.getHour());
         long id = database.insert(ScheduleDBHelper.TABLE_APPOINTMENT,null,values);
         appointment.setId(id);
         return appointment;
@@ -70,6 +71,7 @@ public class AppointmentDAL {
             appointment.setTitle(cursor.getString(1));
             appointment.setDescription(cursor.getString(2));
             appointment.setDate(cursor.getString(3));
+            appointment.setDate(cursor.getString(4));
         }
 
         return appointment;
@@ -85,6 +87,7 @@ public class AppointmentDAL {
                 appointment.setTitle(cursor.getString(cursor.getColumnIndex(ScheduleDBHelper.COLUMN_TITLE)));
                 appointment.setDescription(cursor.getString(cursor.getColumnIndex(ScheduleDBHelper.COLUMN_DESCRIPTION)));
                 appointment.setDate(cursor.getString(cursor.getColumnIndex(ScheduleDBHelper.COLUMN_DATE)));
+                appointment.setHour(cursor.getString(cursor.getColumnIndex(ScheduleDBHelper.COLUMN_HOUR)));
 
                 appointmentList.add(appointment);
             }
@@ -97,6 +100,7 @@ public class AppointmentDAL {
         values.put(ScheduleDBHelper.COLUMN_TITLE,appointment.getTitle());
         values.put(ScheduleDBHelper.COLUMN_DESCRIPTION,appointment.getDescription());
         values.put(ScheduleDBHelper.COLUMN_DATE,appointment.getDate());
+        values.put(ScheduleDBHelper.COLUMN_HOUR,appointment.getHour());
 
         return database.update(ScheduleDBHelper.TABLE_APPOINTMENT,values,ScheduleDBHelper.COLUMN_ID+"=?",
                 new String[]{String.valueOf(appointment.getId())});

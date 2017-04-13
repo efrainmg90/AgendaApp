@@ -11,8 +11,18 @@ public class Appointment implements Serializable{
     private String title;
     private String description;
     private String date;
+    private String hour;
+
+
 
     public Appointment() {
+    }
+    public String getHour() {
+        return hour;
+    }
+
+    public void setHour(String hour) {
+        this.hour = hour;
     }
 
     public long getId() {
@@ -54,6 +64,7 @@ public class Appointment implements Serializable{
                 ", title='" + title + '\'' +
                 ", description='" + description + '\'' +
                 ", date='" + date + '\'' +
+                ", hour='" + hour + '\'' +
                 '}';
     }
 }

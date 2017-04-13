@@ -53,7 +53,24 @@
                 android:layout_alignParentRight="true"
                 android:layout_below="@id/txvDescriptionList"
                 android:layout_marginEnd="13dp"
-                android:text="TextView" />
+                android:text="fecha" />
+
+            <ImageView
+                android:id="@+id/imvIconHour"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_below="@+id/txvDescriptionList"
+                android:layout_alignParentStart="true"
+                app:srcCompat="@drawable/ic_watch_later_black_24dp" />
+
+            <TextView
+                android:id="@+id/txvHourList"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/imvIconHour"
+                android:layout_below="@id/txvDescriptionList"
+                android:layout_marginEnd="13dp"
+                android:text="hora" />
 
         </RelativeLayout>
     </RelativeLayout>

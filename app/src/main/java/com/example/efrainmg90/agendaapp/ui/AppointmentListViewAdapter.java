@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.efrainmg90.agendaapp.R;
 import com.example.efrainmg90.agendaapp.models.Appointment;
@@ -43,18 +44,22 @@ public class AppointmentListViewAdapter extends BaseAdapter {
 
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
-        TextView title, description, date;
+        TextView title, description, date,hour;
         if(view==null)
             view = LayoutInflater.from(context).inflate(R.layout.layout_appointment_list,null);
 
         title = (TextView) view.findViewById(R.id.txvTitleList);
         description = (TextView) view.findViewById(R.id.txvDescriptionList);
         date = (TextView) view.findViewById(R.id.txvDateList);
+        hour = (TextView) view.findViewById(R.id.txvHourList);
 
         Appointment appointment = appointmentList.get(i);
         title.setText(appointment.getTitle());
         description.setText(appointment.getDescription());
         date.setText(appointment.getDate());
+        hour.setText(appointment.getHour());
+        Toast.makeText(context, appointment.toString(), Toast.LENGTH_SHORT).show();
+
         return view;
     }
 }
