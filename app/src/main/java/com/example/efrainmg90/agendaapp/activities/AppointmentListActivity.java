@@ -4,7 +4,9 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Vibrator;
+import android.support.annotation.RequiresApi;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
@@ -16,6 +18,8 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -60,6 +64,7 @@ public class AppointmentListActivity extends AppCompatActivity {
         dalAppointment.close();
 
         bootstrapList();
+
 
     }//fin oncreate
 
@@ -109,6 +114,7 @@ public class AppointmentListActivity extends AppCompatActivity {
         reloadAppointmentList();
     }
 
+
     private void bootstrapList() {
         appointmentListViewAdapter = new AppointmentListViewAdapter(this, appointmentList);
         listView = (ListView) findViewById(R.id.lvAppointmentsList);
@@ -120,6 +126,27 @@ public class AppointmentListActivity extends AppCompatActivity {
                 Intent intent = new Intent(AppointmentListActivity.this, SaveAppointmentActivity.class);
                 startActivity(intent);
 
+            }
+        });
+
+        listView.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView absListView, int i) {
+                int btn_initPosY=actionButtonAdd.getScrollY();
+                if (i == SCROLL_STATE_TOUCH_SCROLL) {
+                    actionButtonAdd.animate().cancel();
+                    actionButtonAdd.animate().translationYBy(150);
+                    actionButtonAdd.animate();
+                    actionButtonAdd.setVisibility(View.INVISIBLE);
+                } else {
+                    actionButtonAdd.setVisibility(View.VISIBLE);
+                    actionButtonAdd.animate().cancel();
+                    actionButtonAdd.animate().translationY(btn_initPosY);
+                }
+            }
+
+            @Override
+            public void onScroll(AbsListView absListView, int i, int i1, int i2) {
             }
         });
 
