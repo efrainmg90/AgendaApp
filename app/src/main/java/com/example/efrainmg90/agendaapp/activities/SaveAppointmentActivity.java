@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -28,7 +27,6 @@ import android.widget.Toast;
 
 import com.example.efrainmg90.agendaapp.DAL.AppointmentDAL;
 import com.example.efrainmg90.agendaapp.Helpers.ContactsLoader;
-import com.example.efrainmg90.agendaapp.Helpers.ScheduleDBHelper;
 import com.example.efrainmg90.agendaapp.R;
 import com.example.efrainmg90.agendaapp.models.Appointment;
 import com.example.efrainmg90.agendaapp.models.Contact;
